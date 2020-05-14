@@ -1,0 +1,32 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.points {
+    font-size: 3rem;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-around;
+    min-height: 100vh;
+}
+
+.card-wrapper .bg-danger:hover {
+    background-color: #d23430 !important;
+    cursor: pointer;
+}
+
+.card-wrapper .bg-warning:hover {
+    background-color: #f26418 !important;
+    cursor: pointer;
+}
+
+.card-wrapper .bg-success:hover {
+    background-color: #80b139 !important;
+    cursor: pointer;
+}

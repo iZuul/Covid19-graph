@@ -30,3 +30,8 @@
     background-color: #80b139 !important;
     cursor: pointer;
 }
+
+.table-wrapper {
+    height: 400px;
+    overflow-y: auto;
+}

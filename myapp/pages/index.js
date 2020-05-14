@@ -1,16 +1,12 @@
 import Head from "next/head";
 import Link from 'next/link';
 import Card from "../components/card";
-import fetch from "isomorphic-unfetch";
+import React, { useState } from "react";
+import { getDataCovid19, getDataCovid19Indonesia } from './api/data'
 
-function Home({
-  positif,
-  meninggal,
-  sembuh,
-  positifIndonesia,
-  sembuhIndonesia,
-  meninggalIndonesia,
-}) {
+function Home({result, resultIndonesia}) {
+  console.log(resultIndonesia)
+  console.log(result)
   return (
     <React.Fragment>
       <Head>
@@ -35,13 +31,15 @@ function Home({
               </div>
               <div className="row">
                 <div className="col-12 col-md-4 card-wrapper">
-                  <Card title="Positif" value={positif} color="bg-warning"></Card>
+                  <Link href="/graph">
+                    <Card title="Positif" value={result.positif.value} color="bg-warning"></Card>
+                  </Link>
                 </div>
                 <div className="col-12 col-md-4 card-wrapper">
-                  <Card title="Meninggal" value={meninggal} color="bg-danger"></Card>
+                  <Card title="Meninggal" value={result.meninggal.value} color="bg-danger"></Card>
                 </div>
                 <div className="col-12 col-md-4 card-wrapper">
-                  <Card title="Sembuh" value={sembuh} color="bg-success"></Card>
+                  <Card title="Sembuh" value={result.sembuh.value} color="bg-success"></Card>
                 </div>
               </div>
             </section>
@@ -61,52 +59,37 @@ function Home({
               </div>
               <div className="row">
                 <div className="col-12 col-md-4 card-wrapper">
-                  <Card title="Positif" value={positifIndonesia} color="bg-warning"></Card>
+                  <Card title="Positif" value={resultIndonesia.positif} color="bg-warning"></Card>
                 </div>
                 <div className="col-12 col-md-4 card-wrapper">
-                  <Card title="Meninggal" value={meninggalIndonesia} color="bg-danger"></Card>
+                  <Card title="Meninggal" value={resultIndonesia.meninggal} color="bg-danger"></Card>
                 </div>
                 <div className="col-12 col-md-4 card-wrapper">
-                  <Card title="Sembuh" value={sembuhIndonesia} color="bg-success"></Card>
+                  <Card title="Sembuh" value={resultIndonesia.sembuh} color="bg-success"></Card>
                 </div>
               </div>
             </section>
           </main>
+
+          <footer className="text-center">
+            Dibuat dengan API dari https://kawalcorona.com/api/
+          </footer>
         </div>
-        <footer>
-          Dibuat dengan API dari https://kawalcorona.com/api/
-        </footer>
       </div>
     </React.Fragment>
-  );
+  )
 }
 
-Home.getInitialProps = async ({ req }) => {
-  try {
-    console.log('fetching......')
-    const resultPositif = await fetch("https://api.kawalcorona.com/positif");
-    const resultSembuh = await fetch("https://api.kawalcorona.com/sembuh");
-    const resultMeninggal = await fetch(
-      "https://api.kawalcorona.com/meninggal"
-    );
-    const resultIndonesia = await fetch(
-      "https://api.kawalcorona.com/indonesia"
-    );
-    const positif = await resultPositif.json();
-    const sembuh = await resultSembuh.json();
-    const meninggal = await resultMeninggal.json();
-    const dataIndonesia = await resultIndonesia.json();
-    return {
-      positif: positif.value,
-      sembuh: sembuh.value,
-      meninggal: meninggal.value,
-      positifIndonesia: dataIndonesia[0].positif,
-      meninggalIndonesia: dataIndonesia[0].meninggal,
-      sembuhIndonesia: dataIndonesia[0].sembuh,
-    };
-  } catch (error) {
-    return error;
+export async function getServerSideProps () {
+  const result = await getDataCovid19()
+  const resultIndonesia = await getDataCovid19Indonesia()
+  // console.log(result.positif);
+  return {
+    props: { 
+      result,
+      resultIndonesia : resultIndonesia.result[0]
+    }
   }
-};
+}
 
 export default Home;

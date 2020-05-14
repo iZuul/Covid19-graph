@@ -1,13 +1,10 @@
 import { useCountUp } from 'react-countup';
 
 const Card = (props) => {
-  const value = 0;
-  if(props) {
+  let value = props  
+  if(props.value){
     value = parseFloat(props.value.replace(/,/g, ''));
-  } else {
-    value = 0;
   }
-
   const { countUp, start } = useCountUp({
     start: 0,
     end: value,
@@ -19,7 +16,12 @@ const Card = (props) => {
     <div className={`card text-white mb-3 ${props.color}`}>
       <div className="card-body">
         <h4 className="card-title">{props.title}</h4>
-        <p className="card-text text-right display-4">{countUp}</p>
+        <p className="card-text text-right display-4">
+          {
+            value == undefined ? "Loading..." : countUp
+          }
+          {/* {props.value} */}
+        </p>
       </div>
     </div>
   )

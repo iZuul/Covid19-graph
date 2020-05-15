@@ -1,15 +1,27 @@
 import Head from "next/head";
 import Router from 'next/router'
 import Link from 'next/link'
+import {useState} from 'react'
 
 function Table({data}) {
-  console.log(data)
+  const [search, setSearch] = useState('');
+
   const handleback = () => {
     console.log('clicked')
     Router.back();
   }
 
-  const dataTable = data.map((item) => {
+  const searchHandler = (event) => {
+    console.log(event.target.value)
+  }
+
+  
+
+  const filterTable = data.filter(item => {
+    return item.attributes.Provinsi.toLowerCase().includes( search.toLowerCase() );
+  })
+
+  const dataTable = filterTable.map((item) => {
     const province = item.attributes
     return (
       <tr key={province.Kode_Provi}>
@@ -43,10 +55,7 @@ function Table({data}) {
               </Link>
             </div>
             <div className="col-6 text-right">
-              <form className="form-inline my-2 my-lg-0 justify-content-end">
-                <input className="form-control mr-sm-2" type="text" placeholder="Search"/>
-                <button className="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-              </form>  
+              <input className="form-control mr-sm-2" type="text" placeholder="Search" onChange={(e) => setSearch(e.target.value)}/>
             </div>
           </div>
           <section className="table-wrapper">
